@@ -43,7 +43,20 @@ public class PulpitManager : MonoBehaviour
     {
         while (true)
         {
+            // Wait for game to start
+            if (GameManager.Instance != null)
+            {
+                while (GameManager.Instance.currentState != GameManager.GameState.Playing)
+                {
+                    yield return null;
+                }
+            }
+
             yield return new WaitForSeconds(spawnDelay);
+
+            // Only spawn if game is still playing
+            if (GameManager.Instance != null && GameManager.Instance.currentState != GameManager.GameState.Playing)
+                continue;
 
             Vector2Int nextPos = GetRandomNeighbour(currentGridPos);
 

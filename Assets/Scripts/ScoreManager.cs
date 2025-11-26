@@ -21,6 +21,11 @@ public class ScoreManager : MonoBehaviour
         UpdateUI();
     }
 
+    public int GetScore()
+    {
+        return score;
+    }
+
     void UpdateUI()
     {
         if (scoreText != null)

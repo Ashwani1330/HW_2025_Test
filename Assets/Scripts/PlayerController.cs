@@ -22,6 +22,22 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // Check if player fell below -5
+        if (transform.position.y < -5f && GameManager.Instance != null)
+        {
+            if (GameManager.Instance.currentState == GameManager.GameState.Playing)
+            {
+                GameManager.Instance.GameOver();
+            }
+        }
+
+        // Only accept input when playing
+        if (GameManager.Instance != null && GameManager.Instance.currentState != GameManager.GameState.Playing)
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
+
         // New Input System - reads WASD and Arrow keys
         moveInput = Vector2.zero;
         
