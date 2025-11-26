@@ -1,22 +1,42 @@
 using UnityEngine;
+using TMPro;
 
+[RequireComponent(typeof(Collider))]
 public class Pulpit : MonoBehaviour
 {
-    float destroyTime;
+    float lifeTime;
+    float timer;
+    bool alreadyScored;
 
-    public void Initialize()
+    public TextMeshProUGUI timerText;
+
+    public void SetLife(float life)
     {
-        var data = GameConfigLoader.Config.pulpit_data;
-        destroyTime = Random.Range(
-            data.min_pulpit_destroy_time,
-            data.max_pulpit_destroy_time
-        );
-
-        Invoke(nameof(DestroySelf), destroyTime);
+        lifeTime = life;
+        timer = lifeTime;
     }
 
-    void DestroySelf()
+    void Update()
     {
-        Destroy(gameObject);
+        if (lifeTime <= 0) return;
+
+        timer -= Time.deltaTime;
+
+        if (timerText != null)
+            timerText.text = Mathf.Max(0, timer).ToString("F2");
+
+        if (timer <= 0f)
+            Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (alreadyScored) return;
+
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            alreadyScored = true;
+            ScoreManager.Instance.AddScore();
+        }
     }
 }
